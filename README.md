@@ -1,7 +1,6 @@
 # Verrauschte Auswertungen: empfehlen, wiederholen, gemeinsame Zufallszahlen – Streamlit-Demo
 
-<!-- TODO nach dem Deploy: direkt hierher den Live-Link setzen (Leerzeile davor und danach):
-**[→ Demo live ausprobieren](https://sebastianhanisch-noisy-bo-demo.streamlit.app/)** -->
+**[→ Demo live ausprobieren](https://sebastianhanisch-noisy-bo-demo.streamlit.app/)**
 
 Drittes Stück der **Bayessche-Optimierung-Linie** in der „Konzepte“-Reihe für die Website „Sebastian Hanisch – Operations Research und Machine Learning“.
 Es setzt [bayes-opt-demo](https://github.com/sebastian-hanisch/bayes-opt-demo) und [bo-modell-demo](https://github.com/sebastian-hanisch/bo-modell-demo) fort: dort war der
