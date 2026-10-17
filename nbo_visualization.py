@@ -1,5 +1,6 @@
 """Plotly-Abbildungen (alle Achsen fest, damit Touch-Scrollen auf der Seite nicht am Diagramm hängen bleibt)."""
 
+import math
 import plotly.graph_objects as go
 
 import nbo_constants as C
@@ -8,6 +9,23 @@ VARIANT_LABEL = {
     "random": "Zufall", "base": "Basis (beste Beobachtung, einmal)", "rule_mean": "bester Mittelwert des Modells", "rep2": "2 Wiederholungen je Einstellung",
     "rep3": "3 Wiederholungen", "rep5": "5 Wiederholungen", "crn": "gemeinsame Zufallszahlen", "crn_rep3": "gemeinsame Zufallszahlen, 3 Wiederholungen",
 }
+
+
+def _ref_line(fig, value, text, position, axis, log=True, **line_kwargs):
+    """Referenzlinie mit Beschriftung auf einer logarithmischen Achse: die Linie liegt auf dem Datenwert, die Beschriftung braucht log10 des Werts
+    (add_hline und add_vline setzen beide auf denselben Wert, die Beschriftung sitzt dann falsch und dehnt die Achse); log=False für lineare Achsen."""
+    if log and not value > 0.0:
+        return
+    pos = math.log10(value) if log else value
+    top, left = "top" in position, "left" in position
+    if axis == "y":
+        fig.add_hline(y=value, **line_kwargs)
+        if text:
+            fig.add_annotation(xref="paper", yref="y", x=0 if left else 1, y=pos, text=text, showarrow=False, xanchor="left" if left else "right", yanchor="bottom" if top else "top")
+    else:
+        fig.add_vline(x=value, **line_kwargs)
+        if text:
+            fig.add_annotation(xref="x", yref="paper", x=pos, y=1 if top else 0, text=text, showarrow=False, xanchor="right" if left else "left", yanchor="top" if top else "bottom")
 
 
 def _fixed(fig, **layout):
@@ -33,7 +51,7 @@ def build_convergence_chart(a):
     if a.kind == "branin":
         fig.update_yaxes(title_text="Regret der Empfehlung (log)", type="log")
     else:
-        fig.add_hline(y=opt, line_dash="dash", line_color=C.COLOR_NEXT, annotation_text="wahres Optimum", annotation_position="bottom right")
+        _ref_line(fig, opt, "wahres Optimum", "bottom right", "y", line_dash="dash", line_color=C.COLOR_NEXT)
         fig.update_yaxes(title_text="Wahre Kosten der Empfehlung (EUR/h)", range=[opt * 0.98, opt * 1.2])
     return _fixed(fig, height=340)
 
